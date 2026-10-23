@@ -1,0 +1,126 @@
+rm -f src/*.o
+rm -f src/models/*.o
+rm -f GBEES
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/kernel.cu -o src/kernel.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/grid.cu -o src/grid.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/maths.cu -o src/maths.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/error.cu -o src/error.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/macro.cu -o src/macro.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/device.cu -o src/device.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/measurement.cu -o src/measurement.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/main.cu -o src/main.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/models.cu -o src/models.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/record.cu -o src/record.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/models/lorenz3D.cu -o src/models/lorenz3D.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/models/lorenz6D.cu -o src/models/lorenz6D.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/models/pcr3bp.cu -o src/models/pcr3bp.o
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -dc -x cu src/models/cr3bp.cu -o src/models/cr3bp.o
+src/models/cr3bp.cu(85): warning: function "jCr3bp" was declared but never referenced
+
+nvcc -arch=compute_61 -lineinfo -O3 -maxrregcount 32 -o GBEES src/kernel.o src/grid.o src/maths.o src/error.o src/macro.o src/device.o src/measurement.o src/main.o src/models.o src/record.o src/models/lorenz3D.o src/models/lorenz6D.o src/models/pcr3bp.o src/models/cr3bp.o
+
+Device 0, Tesla V100-SXM2-32GB, rev: 7.0
+  supports cooperative launch
+  multiprocessors 80
+  max threads per block 1024
+  max threads per multiprocessor 2048
+  max simultaneous theads 163840
+  shared memory per block 49152
+  shared memory per multiprocessor 98304
+  clock rate (kHz) 1530000
+  total memory: 31.73 GB
+
+ -- Measurements -- 
+Measurement: dim 4
+  Mean: {1.001287e+00, 1.117434e-03, -3.733358e-03, 1.160699e-02}
+  Covariance: {
+    1.463679e-08, 2.034904e-09, 9.292311e-08, 3.820124e-08
+    2.034904e-09, 5.228040e-09, 2.924635e-08, -9.148965e-09
+    9.292311e-08, 2.924635e-08, 6.619610e-07, 1.925660e-07
+    3.820124e-08, -9.148965e-09, 1.925660e-07, 1.823596e-07
+  }
+  T: 0.843792
+Measurement: dim 4
+  Mean: {9.999863e-01, 4.807503e-03, 4.797475e-04, 1.313840e-05}
+  Covariance: {
+    7.030361e-09, 0.000000e+00, 0.000000e+00, 0.000000e+00
+    0.000000e+00, 7.030361e-09, 0.000000e+00, 0.000000e+00
+    0.000000e+00, 0.000000e+00, 2.514771e-08, 0.000000e+00
+    0.000000e+00, 0.000000e+00, 0.000000e+00, 2.514771e-08
+  }
+  T: 0.000000
+
+ -- Initialization --
+Max cells 32768000
+Used cells 1874161
+Free cells 30893839
+Shared memory for reduction 4096
+Shared memory for scan 4096
+Required shared memory: static: 8192, dynamic 0
+- Kernel size check: intended 320 blocks of 512 threads, capacity 320 blocks (limit for small kernel 320)
+
+ -- Launch kernel with 320 blocks of 512 threads -- 
+Timestep: 0-1, Runtime cycles: 29061516, Sim. time: 0.000000 TU, Used Cells: 1874161/32768000
+Timestep: 0-20, Runtime cycles: 2726305242, Sim. time: 0.007370 TU, Used Cells: 320818/32768000
+Timestep: 0-40, Runtime cycles: 3676917196, Sim. time: 0.015022 TU, Used Cells: 356756/32768000
+Timestep: 0-60, Runtime cycles: 4843434774, Sim. time: 0.022825 TU, Used Cells: 392042/32768000
+Timestep: 0-80, Runtime cycles: 6224266037, Sim. time: 0.030841 TU, Used Cells: 424489/32768000
+Timestep: 0-100, Runtime cycles: 7791417254, Sim. time: 0.039143 TU, Used Cells: 453007/32768000
+Timestep: 0-120, Runtime cycles: 9509465816, Sim. time: 0.047803 TU, Used Cells: 480749/32768000
+Timestep: 0-140, Runtime cycles: 11361966672, Sim. time: 0.056910 TU, Used Cells: 510458/32768000
+Timestep: 0-160, Runtime cycles: 13358566551, Sim. time: 0.066463 TU, Used Cells: 544262/32768000
+Timestep: 0-180, Runtime cycles: 15525985702, Sim. time: 0.076587 TU, Used Cells: 584267/32768000
+Timestep: 0-200, Runtime cycles: 17898950697, Sim. time: 0.087492 TU, Used Cells: 630515/32768000
+Timestep: 0-220, Runtime cycles: 20485102965, Sim. time: 0.099165 TU, Used Cells: 679784/32768000
+Timestep: 0-240, Runtime cycles: 23286747947, Sim. time: 0.111446 TU, Used Cells: 730789/32768000
+Timestep: 0-260, Runtime cycles: 26330851560, Sim. time: 0.124399 TU, Used Cells: 783890/32768000
+Timestep: 0-280, Runtime cycles: 29663191184, Sim. time: 0.138155 TU, Used Cells: 838806/32768000
+Timestep: 0-300, Runtime cycles: 33275629195, Sim. time: 0.152842 TU, Used Cells: 896568/32768000
+Timestep: 0-320, Runtime cycles: 37188126043, Sim. time: 0.168219 TU, Used Cells: 955518/32768000
+Timestep: 0-340, Runtime cycles: 41411145582, Sim. time: 0.184229 TU, Used Cells: 1016233/32768000
+Timestep: 0-360, Runtime cycles: 45950046342, Sim. time: 0.200882 TU, Used Cells: 1078913/32768000
+Timestep: 0-380, Runtime cycles: 50797227848, Sim. time: 0.217781 TU, Used Cells: 1143294/32768000
+Timestep: 0-400, Runtime cycles: 55941605766, Sim. time: 0.234785 TU, Used Cells: 1208929/32768000
+Timestep: 0-420, Runtime cycles: 61391194668, Sim. time: 0.251886 TU, Used Cells: 1275406/32768000
+Timestep: 0-440, Runtime cycles: 67142430642, Sim. time: 0.269076 TU, Used Cells: 1345065/32768000
+Timestep: 0-460, Runtime cycles: 73211915762, Sim. time: 0.286350 TU, Used Cells: 1418486/32768000
+Timestep: 0-480, Runtime cycles: 79624024750, Sim. time: 0.303716 TU, Used Cells: 1497047/32768000
+Timestep: 0-500, Runtime cycles: 86386795355, Sim. time: 0.321144 TU, Used Cells: 1581992/32768000
+Timestep: 0-520, Runtime cycles: 93518952397, Sim. time: 0.338634 TU, Used Cells: 1674182/32768000
+Timestep: 0-540, Runtime cycles: 101069719510, Sim. time: 0.356219 TU, Used Cells: 1775585/32768000
+Timestep: 0-560, Runtime cycles: 109061286089, Sim. time: 0.373857 TU, Used Cells: 1887541/32768000
+Timestep: 0-580, Runtime cycles: 117529153577, Sim. time: 0.391587 TU, Used Cells: 2010277/32768000
+Timestep: 0-600, Runtime cycles: 126502882039, Sim. time: 0.409360 TU, Used Cells: 2141507/32768000
+Timestep: 0-620, Runtime cycles: 136017264030, Sim. time: 0.427223 TU, Used Cells: 2280112/32768000
+Timestep: 0-640, Runtime cycles: 146085364976, Sim. time: 0.445219 TU, Used Cells: 2427487/32768000
+Timestep: 0-660, Runtime cycles: 156741126943, Sim. time: 0.463289 TU, Used Cells: 2583355/32768000
+Timestep: 0-680, Runtime cycles: 168002261706, Sim. time: 0.481440 TU, Used Cells: 2748059/32768000
+Timestep: 0-700, Runtime cycles: 179889557206, Sim. time: 0.499716 TU, Used Cells: 2921019/32768000
+Timestep: 0-720, Runtime cycles: 192432470787, Sim. time: 0.518117 TU, Used Cells: 3104456/32768000
+Timestep: 0-740, Runtime cycles: 205665136294, Sim. time: 0.536642 TU, Used Cells: 3299197/32768000
+Timestep: 0-760, Runtime cycles: 219610889576, Sim. time: 0.555355 TU, Used Cells: 3503571/32768000
+Timestep: 0-780, Runtime cycles: 234363742466, Sim. time: 0.574236 TU, Used Cells: 3720595/32768000
+Timestep: 0-800, Runtime cycles: 249939777951, Sim. time: 0.593306 TU, Used Cells: 3948175/32768000
+Timestep: 0-820, Runtime cycles: 266405022936, Sim. time: 0.612615 TU, Used Cells: 4188392/32768000
+Timestep: 0-840, Runtime cycles: 283797266432, Sim. time: 0.632125 TU, Used Cells: 4437594/32768000
+Timestep: 0-860, Runtime cycles: 302169852311, Sim. time: 0.651883 TU, Used Cells: 4698452/32768000
+Timestep: 0-880, Runtime cycles: 321606023666, Sim. time: 0.671940 TU, Used Cells: 4974342/32768000
+Timestep: 0-900, Runtime cycles: 342160474957, Sim. time: 0.692328 TU, Used Cells: 5265406/32768000
+Timestep: 0-920, Runtime cycles: 363959379344, Sim. time: 0.713065 TU, Used Cells: 5568690/32768000
+Timestep: 0-940, Runtime cycles: 387172510699, Sim. time: 0.734214 TU, Used Cells: 5887396/32768000
+Timestep: 0-960, Runtime cycles: 411807719631, Sim. time: 0.755373 TU, Used Cells: 6215857/32768000
+Timestep: 0-980, Runtime cycles: 437846421594, Sim. time: 0.776471 TU, Used Cells: 6556154/32768000
+Timestep: 0-1000, Runtime cycles: 465323592839, Sim. time: 0.797124 TU, Used Cells: 6905716/32768000
+Timestep: 0-1020, Runtime cycles: 494102349233, Sim. time: 0.816866 TU, Used Cells: 7256460/32768000
+Timestep: 0-1040, Runtime cycles: 524254963254, Sim. time: 0.835803 TU, Used Cells: 7607208/32768000
+Timestep: 0-1049, Runtime cycles: 537529005587, Sim. time: 0.843792 TU, Used Cells: 8550887/32768000
+
+PERFORMING BAYESIAN UPDATE AT: 0.843792 TU...
+
+Timestep: 1-1, Runtime cycles: 538036481009, Sim. time: 0.843792 TU, Used Cells: 104338/32768000
+Time marching complete, processed cells 3200348633.
+Record grid for time 0.000000 with 1874161 cells to file ./results/P0_pdf_0.bin
+Record grid for time 0.843792 with 8550887 cells to file ./results/P0_pdf_1.bin
+Record grid for time 0.843792 with 104338 cells to file ./results/P1_pdf_0.bin
+Record grid for time 0.000000 with 0 cells to file ./results/P1_pdf_1.bin
+Elapsed: 355011.720623 ms
